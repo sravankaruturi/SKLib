@@ -17,7 +17,10 @@ class RestAPI {
     
     @MainActor public static let shared: RestAPI = RestAPI()
     
-    func postData(url: String, data: [String: Any], headerFields: [String: String] , completion: @escaping (Result<Data, Error>, URLResponse?) -> Void) {
+    /// Posts given data to a URL with the header fields and then calls the completion function once it is done.
+    /// The completion function must be escaping since it can outlive the scope that made this call.
+    /// It must also be Sendable for Concurrency reasons. -- Read more here: https://www.hackingwithswift.com/swift/5.5/sendable
+    func postData(url: String, data: [String: Any], headerFields: [String: String] , completion: @Sendable @escaping (Result<Data, Error>, URLResponse?) -> Void) {
         
         let jsonData = try? JSONSerialization.data(withJSONObject: data, options: [])
         
@@ -48,7 +51,7 @@ class RestAPI {
     }
     
     @discardableResult
-    func putFile(from fileUrl: URL, to uploadUrl: URL, headerFields: [String: String] , completion: @escaping (Result<Void, Error>, URLResponse?) -> Void) -> URLSessionUploadTask {
+    func putFile(from fileUrl: URL, to uploadUrl: URL, headerFields: [String: String] , completion: @Sendable @escaping (Result<Void, Error>, URLResponse?) -> Void) -> URLSessionUploadTask {
     
         var request = URLRequest(url: uploadUrl)
         request.httpMethod = "PUT"
