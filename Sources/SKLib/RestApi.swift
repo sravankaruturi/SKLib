@@ -15,7 +15,7 @@ class RestAPI {
         self.session = session
     }
     
-    public static var shared: RestAPI = RestAPI()
+    @MainActor public static let shared: RestAPI = RestAPI()
     
     func postData(url: String, data: [String: Any], headerFields: [String: String] , completion: @escaping (Result<Data, Error>, URLResponse?) -> Void) {
         
