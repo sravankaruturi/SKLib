@@ -8,7 +8,7 @@ import Foundation
 
 extension Date {
     
-    func formatToMonYear() -> String {
+    public func formatToMonYear() -> String {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM y"
