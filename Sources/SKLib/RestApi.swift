@@ -82,4 +82,41 @@ class RestAPI {
         
     }
     
+    public func fetchData(
+        url: URL,
+        headerFields: [String: String] = [:],
+        completion: @escaping @Sendable (Result<Data, Error>, HTTPURLResponse?) -> Void
+    ) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        for (key, value) in headerFields {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+                
+        let task = session.dataTask(with: request) { data, response, error in
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("error: Unknown response type")
+                completion(.failure(URLError(.unsupportedURL)), nil)
+                return
+            }
+
+            if !httpResponse.isResponseOk {
+                print("error: Request failed (\(httpResponse.statusCode))")
+                completion(.failure(URLError(.unknown)), httpResponse)
+                return
+            }
+
+            guard let data = data, error == nil else {
+                print("error: \(error?.localizedDescription ?? "Unknown error")")
+                completion(.failure(error!), httpResponse)
+                return
+            }
+            
+            completion(.success(data), httpResponse)
+        }
+        task.resume()
+    }
+    
 }
