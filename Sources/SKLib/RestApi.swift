@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RestAPI {
+public class RestAPI {
     
     private let session: URLSession
     
