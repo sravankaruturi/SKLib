@@ -14,6 +14,13 @@ public struct AdvancedTextField: View {
     var prompt: String
     @Binding var text: String
     var action: () -> Void
+    
+    public init(header: String, prompt: String, text: String, action: @escaping () -> Void) {
+        self.header = header
+        self.prompt = prompt
+        self.text = text
+        self.action = action
+    }
 
     public var body: some View {
         // Create an empty NavigationStack to apply the ".searchable" modifier
